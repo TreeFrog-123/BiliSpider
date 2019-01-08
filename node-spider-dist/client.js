@@ -1,106 +1,119 @@
-/**
- * version:2018-03-03
- * 1. 提升稳定性：爬取用户信息时的异常进行处理
- */
-const superagent = require('superagent');
-var moment = require('moment');
-moment.locale('zh-cn');
-const httpGetAsync = url => new Promise((resolve, reject) => superagent.get(url).end((err, res) => err ? reject(err) : resolve(res && res.text)))
-// 获取任务包
-const getPackageAsync = () => httpGetAsync(`http://45.32.68.44:16123/getPackage`)
-// 上传任务结果
-const uploadPackageAsync = (pid, cardList) => {
-    const url = `http://45.32.68.44:16123/uploadPackage`;
-    const data = {
-        pid: pid,
-        package: JSON.stringify(cardList)
-    }
-    return new Promise((resolve, reject) => superagent.post(url).type('form').send(data).end((err, res) => err ? reject(err) : resolve(res && res.text)))
-}
-// 爬取用户信息
-const fetchUserInfo = mid => httpGetAsync(`http://api.bilibili.com/x/web-interface/card?mid=${mid}`)
+const { client } = require('.');
+const minimist = require('minimist');
+const ProgressBar = require('progress');
+const ora = require('ora');
 
-// 休眠函数
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-// 区间数组生成 rangeArray(0,4) => [0,1,2,3,4]
-const rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
-// 按千生成区间数组
-const packageArray = packageId => rangeArray(packageId * 1000 + 1, (packageId + 1) * 1000)
-const nowstr = () => moment().format('YYYY-MM-DD HH:mm:ss')
-//  mids：待处理mid列表，
-const packageFetchInsertAsync = async (pid, mids) => {
-    const BAN_IP_SLEEP_MS = 1000 * 60 * 10; // 10min
-    const NORMAL_SLEEP_MS = 150; //ms
-    let sleepms = NORMAL_SLEEP_MS
+const xdaili = require('./client/proxy/xdaili');
+const xicidaili = require('./client/proxy/xicidaili');
+const kuaidaili = require('./client/proxy/kuaidaili');
+const cnProxy = require('./client/proxy/cn-proxy');
+const ip89 = require('./client/proxy/89ip');
+const yundaili = require('./client/proxy/yundaili');
+const mogudaili = require('./client/proxy/mogudaili');
+const mayidaili = require('./client/proxy/mayidaili');
 
-    const midSize = mids.length
-    let cardList = []
-    let loopCount = 0
-    const processings = {} //进行中的任务
-    while (mids.length > 0) {
-        loopCount++
-        // 循环两遍未结束，强行退出
-        if (loopCount > midSize * 2){
-            console.log(`循环次数已到${loopCount}次，结束循环`);
-            break
-        }
-        let mid = mids.pop();
-        processings[mid] = true
-        fetchUserInfo(mid).then(rs => {
-            if (!rs) throw "Empty response"
-            if (rs.indexOf('DOCTYPE html') >= 0) {
-                sleepms = BAN_IP_SLEEP_MS //IP进小黑屋了
-                mids.push(mid)
-                console.error(`${nowstr()} oops，你的IP进小黑屋了，爬虫程序会在10min后继续`)
-                return
-            }
-            const data = JSON.parse(rs).data;
-            data.card.mid = mid;
-            data.card.archive_count = data.archive_count;
-            data.card.ctime = nowstr()
-            cardList.push(data.card);
-            delete processings[mid]
-        }).catch(err => {
-            mids.push(mid)
-            delete processings[mid]
-            console.error(`${nowstr()} mid=${mid}`, err.message)
-        });
-        // 这里多使用一个变量，防止在sleep过程中sleepms值发生改变
-        const trueSleepTime = sleepms
-        await sleep(trueSleepTime)
-        if (trueSleepTime === BAN_IP_SLEEP_MS) {
-            break // 结束本次任务，尝试下个任务
-        }
-        
-        if (mids.length === 0) {
-            await sleep(7000)
-        }
-    }
-    if (cardList.length === midSize) {
-        await uploadPackageAsync(pid, cardList)
-        console.log(`${nowstr()} Send package ${pid}`);
-    } else {
-        console.error(`${nowstr()} Failed to fetch info, ok/all=${cardList.length}/${midSize}, remains=${mids}, processings=${Object.keys(processings)}`);
-    }
-}
+const args = minimist(process.argv.slice(2), {
+    alias: { 'p': 'proxy', 'q': 'quiet', 'np': 'netproxy' },
+    string: 'proxy',
+    boolean: ['quiet', 'old', 'netproxy', 'dev'],
+    default: { proxy: [ ], quiet: false, old: false }
+});
 
-const run = async () => {
-    console.log(nowstr() + " Start to fetch member info.")
-    for (;;) {
-        try {
-            const data = await getPackageAsync();
-            const pid = JSON.parse(data).pid;
-            if (pid == -1) break
+const config = require('y-config');
+config.args = args;
 
-            const mids = packageArray(pid)
-            console.log(`${nowstr()} Get package ${pid}, fetch mids [${mids[0]}, ${mids[mids.length-1]}]`);
-            await packageFetchInsertAsync(pid, mids)
-        } catch (err) {
-            console.error("很有可能是网络超时了, 10秒后重试", err.message)
-            await sleep(10000);
-        }
+const proxyList =
+    typeof args.proxy === 'string' ? [ args.proxy ] : args.proxy;
+
+const barMap = { };
+
+const startLoop = async () => {
+    try {
+        return await client.loop(proxyList);
+    } catch (error) {
+        return startLoop();
     }
-    console.log(nowstr() + ` End fetch.`);
-}
+};
+
 // start code
-run();
+(async () => {
+    require('cfonts').say('UUPERS', { align: 'left', font: 'block' });
+    if (args.quiet) {
+        client.setOutput();
+    } else if (!args.old) {
+        let spiderInfo;
+        client.setOutput();
+        client.on(client.event.START, (pid, mids) => {
+            const format =
+                'Package :pkg [:bar] :percent :rate/urs:active:ban:ips :elapseds';
+            barMap[pid] = new ProgressBar(format, {
+                width: 25,
+                total: mids.length
+            });
+            barMap[pid].tick(0, { 'pkg': pid });
+        });
+        client.on(client.event.HEART, (pid, info) => {
+            const bar = barMap[pid];
+            if (!bar) {
+                return;
+            }
+            spiderInfo = info;
+            const a = `${spiderInfo.active}${spiderInfo.ban === 0 ? '' : 'A'}`;
+            bar.tick(0, {
+                'pkg': pid,
+                'active': spiderInfo.total <= 1 ? '' : `[${a}`,
+                'ban': spiderInfo.ban === 0 ? '' : `,${spiderInfo.ban}B`,
+                'ips': spiderInfo.total <= 1 ? '' : `/${spiderInfo.total}IPs]`
+            });
+        });
+        client.on(client.event.CATCH, (pid, mid, cardList) => {
+            const bar = barMap[pid];
+            if (!bar) {
+                return;
+            }
+            const a = `${spiderInfo.active}${spiderInfo.ban === 0 ? '' : 'A'}`;
+            bar.tick({
+                'pkg': pid,
+                'active': spiderInfo.total <= 1 ? '' : `[${a}`,
+                'ban': spiderInfo.ban === 0 ? '' : `,${spiderInfo.ban}B`,
+                'ips': spiderInfo.total <= 1 ? '' : `/${spiderInfo.total}IPs]`
+            });
+        });
+        client.on(client.event.END, (pid) => {
+            delete barMap[pid];
+        });
+        client.on(client.event.TIMEOUT, (pid) => {
+            delete barMap[pid];
+            ora(`获取超时 Package ${pid}`).fail();
+        });
+        client.on(client.event.VING, (pid) => {
+            barMap[pid] = ora(`正在校检 Package ${pid}`).start();
+        });
+        client.on(client.event.VFAIL, (pid) => {
+            barMap[pid].fail(`数据有误 Package ${pid}`);
+            delete barMap[pid];
+        });
+        client.on(client.event.SENDING, (pid) => {
+            barMap[pid].start(`正在上传 Package ${pid}`);
+        });
+        client.on(client.event.SENDED, (pid) => {
+            barMap[pid].succeed(`成功上传 Package ${pid}`);
+            delete barMap[pid];
+        });
+        client.on(client.event.SENDFAIL, (pid) => {
+            barMap[pid].fail(`上传失败 Package ${pid}`);
+            delete barMap[pid];
+        });
+    }
+    if (args.np) {
+        xdaili.process();
+        xicidaili.process();
+        kuaidaili.process();
+        cnProxy.process();
+        ip89.process();
+        yundaili.process();
+        mogudaili.process();
+        mayidaili.process();
+    }
+    await startLoop();
+})();

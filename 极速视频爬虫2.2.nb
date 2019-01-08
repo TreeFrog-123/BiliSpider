@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     80644,       1566]
-NotebookOptionsPosition[     80213,       1550]
-NotebookOutlinePosition[     80589,       1567]
-CellTagsIndexPosition[     80546,       1564]
+NotebookDataLength[     71511,       1281]
+NotebookOptionsPosition[     71078,       1265]
+NotebookOutlinePosition[     71455,       1282]
+CellTagsIndexPosition[     71412,       1279]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -29,98 +29,78 @@ Cell[BoxData[{
     RowBox[{"s_", ",", 
      RowBox[{"encode_", "/;", 
       RowBox[{"encode", "===", "$Failed"}]}]}], "]"}], ":=", "$Failed"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"GetData", "[", 
-   RowBox[{"rid_", ",", 
-    RowBox[{"scanlimit_:", "800"}], ",", 
-    RowBox[{"timelimit_:", "45"}], ",", 
-    RowBox[{"aidlimit_:", "22000000"}]}], "]"}], ":=", "\[IndentingNewLine]", 
-  RowBox[{"Block", "[", 
+  RowBox[{
    RowBox[{
-    RowBox[{"{", 
+    RowBox[{"VideosData", "[", "pnlist_", "]"}], ":=", "\[IndentingNewLine]", 
+    RowBox[{"Block", "[", 
      RowBox[{
-     "TotalVideos", ",", "VideosData", ",", "ParallelData", ",", "address", 
-      ",", "connection", ",", "totalvideos", ",", "plist", ",", "adddatalist",
-       ",", "nowvideos", ",", "tstart", ",", "tend"}], "}"}], ",", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{
-      RowBox[{"TotalVideos", "[", "]"}], ":=", 
-      RowBox[{"\"\<count\>\"", "/.", 
-       RowBox[{"(", 
-        RowBox[{"\"\<page\>\"", "/.", 
-         RowBox[{"(", 
-          RowBox[{"\"\<data\>\"", "/.", 
-           RowBox[{"Import", "[", 
-            RowBox[{
-             RowBox[{
-             "\"\<https://api.bilibili.com/x/web-interface/newlist?rid=\>\"", 
-              "<>", 
-              RowBox[{"ToString", "[", "rid", "]"}], "<>", "\"\<&ps=1\>\""}], 
-             ",", "\"\<JSON\>\""}], "]"}]}], ")"}]}], ")"}]}]}], ";", 
-     "\[IndentingNewLine]", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"VideosData", "[", "pnlist_", "]"}], ":=", 
-      "\[IndentingNewLine]", 
-      RowBox[{"Block", "[", 
+      RowBox[{"{", 
        RowBox[{
-        RowBox[{"{", 
+        RowBox[{"tempdata", "=", 
+         RowBox[{"<|", "|>"}]}], ",", 
+        RowBox[{"temprecord", "=", 
+         RowBox[{"<|", "|>"}]}], ",", "VideoData", ",", "adddata"}], "}"}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"VideoData", "[", 
+         RowBox[{"pn_", ",", "recheck_"}], "]"}], ":=", 
+        RowBox[{"URLSubmit", "[", 
          RowBox[{
-          RowBox[{"tempdata", "=", 
-           RowBox[{"<|", "|>"}]}], ",", 
-          RowBox[{"temprecord", "=", 
-           RowBox[{"<|", "|>"}]}], ",", "VideoData"}], "}"}], ",", 
-        "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{
-          RowBox[{"VideoData", "[", "pn_", "]"}], ":=", 
-          RowBox[{"URLSubmit", "[", 
+          RowBox[{"HTTPRequest", "[", 
            RowBox[{
-            RowBox[{"HTTPRequest", "[", 
-             RowBox[{
+            RowBox[{
+            "\"\<https://api.bilibili.com/x/article/archives?ids=\>\"", "<>", 
+             RowBox[{"StringRiffle", "[", 
               RowBox[{
-              "\"\<https://api.bilibili.com/x/web-interface/newlist?rid=\>\"",
-                "<>", 
-               RowBox[{"ToString", "[", "rid", "]"}], "<>", "\"\<&pn=\>\"", "<>", 
-               RowBox[{"ToString", "[", "pn", "]"}], "<>", "\"\<&ps=50\>\""}],
-               ",", 
-              RowBox[{"TimeConstraint", "\[Rule]", "10"}]}], "]"}], ",", 
-            RowBox[{"HandlerFunctions", "\[Rule]", "\[IndentingNewLine]", 
-             RowBox[{"<|", 
-              RowBox[{
-               RowBox[{"\"\<ConnectionFailed\>\"", "\[Rule]", 
-                RowBox[{"(", 
+               RowBox[{"ToString", "/@", 
+                RowBox[{"Range", "[", 
                  RowBox[{
-                  RowBox[{"VideoData", "[", "pn", "]"}], "&"}], ")"}]}], ",", 
-               "\[IndentingNewLine]", 
-               RowBox[{"\"\<TaskFinished\>\"", "\[Rule]", 
-                RowBox[{"(", 
-                 RowBox[{
-                  RowBox[{"If", "[", 
-                   RowBox[{
-                    RowBox[{
-                    RowBox[{"#", "===", "$Failed"}], "||", 
-                    RowBox[{
-                    RowBox[{"Head", "[", "#", "]"}], "=!=", "Association"}], "||", 
+                  RowBox[{
+                   RowBox[{"100", 
                     RowBox[{"(", 
+                    RowBox[{"pn", "-", "1"}], ")"}]}], "+", "1"}], ",", 
+                  RowBox[{"100", " ", "pn"}]}], "]"}]}], ",", "\"\<,\>\""}], 
+              "]"}]}], ",", 
+            RowBox[{"TimeConstraint", "\[Rule]", "10"}]}], "]"}], ",", 
+          RowBox[{"HandlerFunctions", "\[Rule]", "\[IndentingNewLine]", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<ConnectionFailed\>\"", "\[Rule]", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"VideoData", "[", 
+                 RowBox[{"pn", ",", "recheck"}], "]"}], "&"}], ")"}]}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"\"\<TaskFinished\>\"", "\[Rule]", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"#", "===", "$Failed"}], "||", 
+                   RowBox[{
+                    RowBox[{"Head", "[", "#", "]"}], "=!=", "Association"}], "||", 
+                   RowBox[{"(", 
                     RowBox[{"!", 
                     RowBox[{"KeyExistsQ", "[", 
                     RowBox[{"#", ",", "\"\<Body\>\""}], "]"}]}], ")"}], "||", 
-                    RowBox[{
+                   RowBox[{
                     RowBox[{"Head", "@", 
                     RowBox[{"#", "[", "\"\<Body\>\"", "]"}]}], "=!=", 
                     "List"}], "||", 
-                    RowBox[{
+                   RowBox[{
                     RowBox[{"Head", "@", 
                     RowBox[{"First", "@", 
                     RowBox[{"#", "[", "\"\<Body\>\"", "]"}]}]}], "=!=", 
                     "String"}]}], ",", "\[IndentingNewLine]", 
-                    RowBox[{"VideoData", "[", "pn", "]"}], ",", 
-                    "\[IndentingNewLine]", 
-                    RowBox[{
-                    RowBox[{"AssociateTo", "[", 
-                    RowBox[{"tempdata", ",", 
+                  RowBox[{"VideoData", "[", 
+                   RowBox[{"pn", ",", "recheck"}], "]"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"adddata", "=", 
                     RowBox[{"StringCases", "[", 
                     RowBox[{
                     RowBox[{"First", "@", 
@@ -165,8 +145,10 @@ Cell[BoxData[{
                     "\"\<,\\\"share\\\":\>\"", "~~", "share__", "~~", 
                     "\[IndentingNewLine]", "\"\<,\>\"", "~~", "__", "~~", 
                     "\[IndentingNewLine]", "\"\<,\\\"like\\\":\>\"", "~~", 
-                    "like__", "~~", "\"\<}\>\""}], "\[IndentingNewLine]", 
-                    "]"}], "\[RuleDelayed]", 
+                    "like__", "~~", "\[IndentingNewLine]", 
+                    "\"\<,\\\"dislike\\\":\>\"", "~~", "dislike__", "~~", 
+                    "\"\<}\>\""}], "\[IndentingNewLine]", "]"}], 
+                    "\[RuleDelayed]", 
                     RowBox[{"(", 
                     RowBox[{
                     RowBox[{"aid", "\[Rule]", 
@@ -204,79 +186,113 @@ Cell[BoxData[{
                     RowBox[{"(*", "\:5206\:4eab\:6570", "*)"}], 
                     "\[IndentingNewLine]", "reply", ",", 
                     RowBox[{"(*", "\:8bc4\:8bba\:6570", "*)"}], 
-                    "\[IndentingNewLine]", "like"}], 
-                    RowBox[{"(*", "\:70b9\:8d5e\:6570", "*)"}], "}"}], 
+                    "\[IndentingNewLine]", "like", ",", 
+                    RowBox[{"(*", "\:70b9\:8d5e\:6570", "*)"}], 
+                    "\[IndentingNewLine]", "dislike"}], 
+                    RowBox[{"(*", "\:5dee\:8bc4\:6570", "*)"}], "}"}], 
                     "]"}]}]}], "/.", 
                     RowBox[{"$Failed", "\[Rule]", 
-                    RowBox[{"-", "1"}]}]}], ")"}]}]}], "]"}]}], "]"}], ";", 
+                    RowBox[{"-", "1"}]}]}], ")"}]}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"adddata", "===", 
+                    RowBox[{"{", "}"}]}], "&&", 
+                    RowBox[{"recheck", ">", "1"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"VideoData", "[", 
+                    RowBox[{"pn", ",", 
+                    RowBox[{"recheck", "-", "1"}]}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"AssociateTo", "[", 
+                    RowBox[{"tempdata", ",", "adddata"}], "]"}], ";", 
                     "\[IndentingNewLine]", 
                     RowBox[{"AssociateTo", "[", 
                     RowBox[{"temprecord", ",", 
-                    RowBox[{"pn", "\[Rule]", "1"}]}], "]"}]}]}], "]"}], "&"}],
-                  ")"}]}]}], "|>"}]}], ",", 
-            RowBox[{"HandlerFunctionsKeys", "\[Rule]", "\"\<Body\>\""}]}], 
-           "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"VideoData", "/@", "pnlist"}], ";", "\[IndentingNewLine]", 
-         RowBox[{"While", "[", 
-          RowBox[{
-           RowBox[{
-            RowBox[{"Length", "[", "temprecord", "]"}], "<", 
-            RowBox[{"Length", "[", "pnlist", "]"}]}], ",", "1"}], "]"}], ";", 
-         "\[IndentingNewLine]", "tempdata"}]}], "]"}]}], ";", 
-     "\[IndentingNewLine]", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"ParallelData", "[", "pointer_", "]"}], ":=", 
-      "\[IndentingNewLine]", 
-      RowBox[{
+                    RowBox[{"pn", "\[Rule]", "1"}]}], "]"}]}]}], "]"}]}]}], 
+                 "]"}], "&"}], ")"}]}]}], "|>"}]}], ",", 
+          RowBox[{"HandlerFunctionsKeys", "\[Rule]", "\"\<Body\>\""}]}], 
+         "]"}]}], ";", "\[IndentingNewLine]", 
        RowBox[{
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{"#", "===", "$Failed"}], ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"CloseKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
-           RowBox[{"LaunchKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
-           RowBox[{"ParallelData", "[", "pointer", "]"}]}], ",", 
-          "\[IndentingNewLine]", "#"}], "]"}], "&"}], "@", 
-       RowBox[{"TimeConstrained", "[", "\[IndentingNewLine]", 
         RowBox[{
-         RowBox[{"Quiet", "@", 
-          RowBox[{"ParallelCombine", "[", 
-           RowBox[{
-            RowBox[{
-             RowBox[{"VideosData", "[", "#", "]"}], "&"}], ",", "pointer", 
-            ",", 
-            RowBox[{
-             RowBox[{"If", "[", 
-              RowBox[{
-               RowBox[{"MemberQ", "[", 
-                RowBox[{
-                 RowBox[{"Head", "/@", 
-                  RowBox[{"{", "##", "}"}]}], ",", 
-                 RowBox[{"Except", "[", "Association", "]"}]}], "]"}], ",", 
-               "$Failed", ",", 
-               RowBox[{"Join", "[", "##", "]"}]}], "]"}], "&"}], ",", 
-            RowBox[{"Method", "\[Rule]", "\"\<CoarsestGrained\>\""}]}], 
-           "]"}]}], ",", "\[IndentingNewLine]", "timelimit", ",", 
-         "\[IndentingNewLine]", 
+         RowBox[{"VideoData", "[", 
+          RowBox[{"#", ",", "3"}], "]"}], "&"}], "/@", "pnlist"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"While", "[", 
+        RowBox[{
          RowBox[{
-          RowBox[{"CloseKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
-          RowBox[{"LaunchKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
-          RowBox[{"ParallelData", "[", "pointer", "]"}]}]}], "]"}]}]}], ";", 
-     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"Length", "[", "temprecord", "]"}], "<", 
+          RowBox[{"Length", "[", "pnlist", "]"}]}], ",", "1"}], "]"}], ";", 
+       "\[IndentingNewLine]", "tempdata"}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ParallelData", "[", 
+     RowBox[{"timelimit_", ",", "pointer_"}], "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"#", "===", "$Failed"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"CloseKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"LaunchKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"ParallelData", "[", 
+          RowBox[{"timelimit", ",", "pointer"}], "]"}]}], ",", 
+        "\[IndentingNewLine]", "#"}], "]"}], "&"}], "@", 
+     RowBox[{"TimeConstrained", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Quiet", "@", 
+        RowBox[{"ParallelCombine", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"VideosData", "[", "#", "]"}], "&"}], ",", "pointer", ",", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"MemberQ", "[", 
+              RowBox[{
+               RowBox[{"Head", "/@", 
+                RowBox[{"{", "##", "}"}]}], ",", 
+               RowBox[{"Except", "[", "Association", "]"}]}], "]"}], ",", 
+             "$Failed", ",", 
+             RowBox[{"Join", "[", "##", "]"}]}], "]"}], "&"}], ",", 
+          RowBox[{"Method", "\[Rule]", "\"\<CoarsestGrained\>\""}]}], "]"}]}],
+        ",", "\[IndentingNewLine]", "timelimit", ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"CloseKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"LaunchKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"ParallelData", "[", 
+         RowBox[{"timelimit", ",", "pointer"}], "]"}]}]}], "]"}]}]}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GetData", "[", 
+   RowBox[{"name_", ",", 
+    RowBox[{"scanlimit_:", "1500"}], ",", 
+    RowBox[{"timelimit_:", "60"}]}], "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "address", ",", "adddatalist", ",", "pointer", ",", "addvideos", ",", 
+      "totalvideos", ",", "tstart", ",", "tend"}], "}"}], ",", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{
      RowBox[{"address", "=", " ", 
       RowBox[{
-       RowBox[{"NotebookDirectory", "[", "]"}], "<>", 
-       RowBox[{"ToString", "[", "rid", "]"}]}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"totalvideos", "=", 
-      RowBox[{"TotalVideos", "[", "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"nowvideos", "=", "0"}], ";", "\[IndentingNewLine]", 
-     RowBox[{"plist", "=", 
-      RowBox[{"ConstantArray", "[", 
-       RowBox[{"0", ",", "aidlimit"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"NotebookDirectory", "[", "]"}], "<>", "name"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"pointer", "=", 
+      RowBox[{"Range", "[", "scanlimit", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"totalvideos", "=", "0"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"tstart", "=", 
+      RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"tend", "=", 
-      RowBox[{"tstart", "=", 
-       RowBox[{"AbsoluteTime", "[", "]"}]}]}], ";", "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"tstart", "+", "1"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"Monitor", "[", 
       RowBox[{
        RowBox[{
@@ -284,486 +300,167 @@ Cell[BoxData[{
          RowBox[{"True", ",", "\[IndentingNewLine]", 
           RowBox[{
            RowBox[{"adddatalist", "=", 
-            RowBox[{
-             RowBox[{
-              RowBox[{"Pick", "[", 
-               RowBox[{"#", ",", 
-                RowBox[{"plist", "[", 
-                 RowBox[{"[", 
-                  RowBox[{"#", "[", 
-                   RowBox[{"[", 
-                    RowBox[{";;", ",", "1"}], "]"}], "]"}], "]"}], "]"}], ",",
-                 "0"}], "]"}], "&"}], "@", 
-             RowBox[{"Values", "@", 
-              RowBox[{"ParallelData", "@", 
-               RowBox[{"Union", "[", 
-                RowBox[{
-                 RowBox[{"{", "1", "}"}], ",", 
-                 RowBox[{"Range", "[", 
-                  RowBox[{
-                   RowBox[{
-                    RowBox[{"Floor", "[", 
-                    FractionBox["nowvideos", "50"], "]"}], "+", "1"}], ",", 
-                   RowBox[{"Min", "[", 
-                    RowBox[{
-                    RowBox[{
-                    FractionBox["totalvideos", "50"], "+", "20"}], ",", 
-                    RowBox[{
-                    FractionBox["nowvideos", "50"], "+", "scanlimit"}]}], 
-                    "]"}]}], "]"}]}], "]"}]}]}]}]}], ";", 
+            RowBox[{"Values", "@", 
+             RowBox[{"ParallelData", "[", 
+              RowBox[{"timelimit", ",", "pointer"}], "]"}]}]}], ";", 
            "\[IndentingNewLine]", 
-           RowBox[{"If", "[", 
-            RowBox[{
-             RowBox[{"adddatalist", "===", 
-              RowBox[{"{", "}"}]}], ",", 
-             RowBox[{"Break", "[", "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
-           RowBox[{"BinaryWrite", "[", 
-            RowBox[{"address", ",", "adddatalist", ",", "\"\<Integer32\>\""}],
-             "]"}], ";", "\[IndentingNewLine]", 
-           RowBox[{"nowvideos", "+=", 
+           RowBox[{"addvideos", "=", 
             RowBox[{"Length", "[", "adddatalist", "]"}]}], ";", 
            "\[IndentingNewLine]", 
            RowBox[{"If", "[", 
             RowBox[{
-             RowBox[{
-              RowBox[{
-               RowBox[{"Length", "[", "adddatalist", "]"}], "<", 
-               RowBox[{"45", "*", "scanlimit"}]}], "&&", 
-              RowBox[{
-               RowBox[{"totalvideos", "-", "nowvideos"}], "<", "500"}]}], ",", 
+             RowBox[{"addvideos", "===", "0"}], ",", 
              RowBox[{"Break", "[", "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"plist", "[", 
-             RowBox[{"[", 
-              RowBox[{"adddatalist", "[", 
-               RowBox[{"[", 
-                RowBox[{";;", ",", "1"}], "]"}], "]"}], "]"}], "]"}], "=", 
-            "1"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"BinaryWrite", "[", 
+            RowBox[{"address", ",", "adddatalist", ",", "\"\<Integer32\>\""}],
+             "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"totalvideos", "+=", "addvideos"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"pointer", "+=", "scanlimit"}], ";", "\[IndentingNewLine]", 
            RowBox[{"tend", "=", 
             RowBox[{"AbsoluteTime", "[", "]"}]}]}]}], "]"}], ";", 
         "\[IndentingNewLine]", 
         RowBox[{"Close", "[", "address", "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{
+        RowBox[{"Echo", "[", 
          RowBox[{
-          RowBox[{"(", 
-           RowBox[{
-            RowBox[{"Echo", "[", 
-             RowBox[{
-              RowBox[{"ToString", "[", "rid", "]"}], "<>", 
-              "\"\<\:533a\:904d\:5386\:5b8c\:6210,\:53d1\:73b0\>\"", "<>", 
-              RowBox[{"ToString", "[", "#1", "]"}], "<>", 
-              "\"\<\:89c6\:9891,\:5168\:90e8\>\"", "<>", 
-              RowBox[{"ToString", "[", "#2", "]"}], "<>", 
-              "\"\<\:89c6\:9891\>\""}], "]"}], ";", "\[IndentingNewLine]", 
-            RowBox[{"{", 
-             RowBox[{"#1", ",", "#2"}], "}"}]}], ")"}], "&"}], "[", 
-         RowBox[{"nowvideos", ",", 
-          RowBox[{"TotalVideos", "[", "]"}]}], "]"}]}], ",", 
-       "\[IndentingNewLine]", 
+          RowBox[{
+          "\"\<\:5168\:7ad9\:904d\:5386\:5b8c\:6210,\:5171\:53d1\:73b0\>\"", "<>", 
+           RowBox[{"ToString", "[", "totalvideos", "]"}], "<>", 
+           "\"\<\:89c6\:9891,\:7d2f\:8ba1\:7528\:65f6\>\"", "<>", 
+           RowBox[{"ToString", "[", 
+            RowBox[{"tend", "-", "tstart"}], "]"}], "<>", "\"\<\:79d2\>\""}], 
+          ",", 
+          RowBox[{"\"\<\:5e73\:5747\:901f\:5ea6\>\"", "<>", 
+           RowBox[{"ToString", "[", 
+            FractionBox["totalvideos", 
+             RowBox[{"tend", "-", "tstart"}]], "]"}], "<>", 
+           "\"\<\:89c6\:9891\:6bcf\:79d2\>\""}]}], "]"}], ";"}], 
+       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
        RowBox[{"Column", "[", 
         RowBox[{"{", "\[IndentingNewLine]", 
          RowBox[{
-          RowBox[{"\"\<\:5206\:533a\:7f16\:53f7: \>\"", "<>", 
-           RowBox[{"ToString", "[", "rid", "]"}]}], ",", 
-          "\[IndentingNewLine]", 
           RowBox[{"\"\<\:6293\:53d6\:89c6\:9891: \>\"", "<>", 
-           RowBox[{"ToString", "[", "nowvideos", "]"}]}], ",", 
+           RowBox[{"ToString", "[", "totalvideos", "]"}]}], ",", 
           "\[IndentingNewLine]", 
-          RowBox[{"\"\<\:8fd0\:884c\:65f6\:95f4: \>\"", "<>", 
-           RowBox[{"ToString", "\[IndentingNewLine]", "[", 
-            RowBox[{"tend", "-", "tstart"}], "]"}]}]}], "}"}], "]"}]}], 
-      "]"}]}]}], "]"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"s", "=", 
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{"12", ",", "\"\<\:672a\:77e5(\:9690\:85cf)-\:672a\:77e5\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "15", ",", 
-       "\"\<\:8fde\:8f7d\:5267\:96c6(\:9690\:85cf)-\:7535\:89c6\:5267\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "16", ",", "\"\<flash\:6e38\:620f(\:9690\:85cf)-\:6e38\:620f\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"17", ",", "\"\<\:5355\:673a\:8054\:673a-\:6e38\:620f\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"19", ",", "\"\<Mugen-\:6e38\:620f\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"20", ",", "\"\<\:5b85\:821e-\:821e\:8e48\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"21", ",", "\"\<\:65e5\:5e38-\:751f\:6d3b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"22", ",", "\"\<\:9b3c\:755c\:8c03\:6559-\:9b3c\:755c\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"24", ",", "\"\<MAD\[CenterDot]AMV-\:52a8\:753b\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{"25", ",", "\"\<MMD\[CenterDot]3D-\:52a8\:753b\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{"26", ",", "\"\<\:97f3MAD-\:9b3c\:755c\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"27", ",", "\"\<\:7efc\:5408-\:52a8\:753b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"28", ",", "\"\<\:539f\:521b\:97f3\:4e50-\:97f3\:4e50\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "29", ",", "\"\<\:4e09\:6b21\:5143\:97f3\:4e50-\:97f3\:4e50\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"30", ",", "\"\<VOCALOID\[CenterDot]UTAU-\:97f3\:4e50\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"31", ",", "\"\<\:7ffb\:5531-\:97f3\:4e50\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"32", ",", "\"\<\:5b8c\:7ed3\:52a8\:753b-\:756a\:5267\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"33", ",", "\"\<\:8fde\:8f7d\:52a8\:753b-\:756a\:5267\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "37", ",", "\"\<\:4eba\:6587\:5386\:53f2-\:7eaa\:5f55\:7247\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "39", ",", 
-       "\"\<\:6f14\:8bb2\[CenterDot] \:516c\:5f00\:8bfe-\:79d1\:6280\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"41", ",", "\"\<\:672a\:77e5(\:9690\:85cf)-\:672a\:77e5\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"46", ",", "\"\<MMD.3D(\:9690\:85cf)-\:52a8\:753b\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "47", ",", 
-       "\"\<\:77ed\:7247\[CenterDot]\:624b\:4e66\[CenterDot]\:914d\:97f3-\
-\:52a8\:753b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "50", ",", 
-       "\"\<\:77ed\:7247\[CenterDot]\:624b\:4e66\[CenterDot]\:914d\:97f3(\
-\:9690\:85cf)-\:52a8\:753b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"51", ",", "\"\<\:8d44\:8baf-\:756a\:5267\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"53", ",", "\"\<\:7efc\:5408(\:9690\:85cf)-\:52a8\:753b\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"54", ",", "\"\<OP/ED/OST-\:97f3\:4e50\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"56", ",", "\"\<VOCALOID(\:9690\:85cf)-\:97f3\:4e50\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"59", ",", "\"\<\:6f14\:594f-\:97f3\:4e50\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "60", ",", 
-       "\"\<\:7535\:5b50\:7ade\:6280(\:9690\:85cf)-\:6e38\:620f\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{"65", ",", "\"\<\:7f51\:7edc\:6e38\:620f-\:6e38\:620f\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "67", ",", 
-       "\"\<\:5355\:673a\:6e38\:620f(\:9690\:85cf)-\:6e38\:620f\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{"71", ",", "\"\<\:7efc\:827a-\:5a31\:4e50\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"74", ",", "\"\<\:65e5\:5e38(\:9690\:85cf)-\:751f\:6d3b\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"75", ",", "\"\<\:52a8\:7269\:5708-\:751f\:6d3b\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{"76", ",", "\"\<\:7f8e\:98df\:5708-\:751f\:6d3b\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "77", ",", "\"\<\:52a8\:7269\:5708(\:9690\:85cf)-\:751f\:6d3b\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "79", ",", "\"\<\:52a8\:7269\:5708(\:9690\:85cf)-\:751f\:6d3b\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "80", ",", "\"\<\:7f8e\:98df\:5708(\:9690\:85cf)-\:751f\:6d3b\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "82", ",", 
-       "\"\<\:7535\:5f71\:76f8\:5173(\:9690\:85cf)-\:7535\:5f71\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{"83", ",", "\"\<\:5176\:4ed6\:56fd\:5bb6-\:7535\:5f71\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"85", ",", "\"\<\:77ed\:7247-\:5f71\:89c6\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"86", ",", "\"\<\:7279\:6444-\:5f71\:89c6\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "94", ",", 
-       "\"\<\:5b8c\:7ed3\:52a8\:753b(\:9690\:85cf)-\:52a8\:753b\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{"95", ",", "\"\<\:6570\:7801-\:79d1\:6280\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"96", ",", "\"\<\:661f\:6d77-\:79d1\:6280\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"98", ",", "\"\<\:673a\:68b0-\:79d1\:6280\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"114", ",", "\"\<\:7efc\:827a(\:9690\:85cf)-\:5a31\:4e50\>\""}],
-       "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"116", ",", "\"\<\:672a\:77e5(\:9690\:85cf)-\:672a\:77e5\>\""}],
-       "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"118", ",", "\"\<\:672a\:77e5(\:9690\:85cf)-\:672a\:77e5\>\""}],
-       "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "120", ",", 
-       "\"\<\:8fde\:8f7d\:52a8\:753b(\:9690\:85cf)-\:52a8\:753b\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{"121", ",", "\"\<GMV-\:6e38\:620f\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "122", ",", 
-       "\"\<\:91ce\:751f\:6280\:672f\:534f\:4f1a-\:79d1\:6280\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "124", ",", 
-       "\"\<\:8da3\:5473\:79d1\:666e\:4eba\:6587-\:79d1\:6280\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "125", ",", 
-       "\"\<\:4eba\:6587\:5386\:53f2(\:9690\:85cf)-\:7eaa\:5f55\:7247\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"126", ",", "\"\<\:4eba\:529bVOCALOID-\:9b3c\:755c\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"127", ",", "\"\<\:6559\:7a0b\:6f14\:793a-\:9b3c\:755c\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "128", ",", 
-       "\"\<\:7535\:89c6\:5267\:76f8\:5173(\:9690\:85cf)-\:7535\:89c6\:5267\>\
-\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"130", ",", "\"\<\:97f3\:4e50\:9009\:96c6-\:97f3\:4e50\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"131", ",", "\"\<Korea\:76f8\:5173-\:5a31\:4e50\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "134", ",", "\"\<Korea\:76f8\:5173(\:9690\:85cf)-\:5a31\:4e50\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"135", ",", "\"\<\:672a\:77e5(\:9690\:85cf)-\:672a\:77e5\>\""}],
-       "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"136", ",", "\"\<\:97f3\:6e38-\:6e38\:620f\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"137", ",", "\"\<\:660e\:661f-\:5a31\:4e50\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"138", ",", "\"\<\:641e\:7b11-\:751f\:6d3b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "139", ",", 
-       "\"\<\:7f51\:7edc\:6e38\:620f(\:9690\:85cf)-\:6e38\:620f\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "141", ",", 
-       "\"\<\:6e38\:620f\:96c6\:9526(\:9690\:85cf)-\:6e38\:620f\>\""}], "}"}],
-      ",", 
-     RowBox[{"{", 
-      RowBox[{"145", ",", "\"\<\:6b27\:7f8e\:7535\:5f71-\:7535\:5f71\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"146", ",", "\"\<\:65e5\:672c\:7535\:5f71-\:7535\:5f71\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"147", ",", "\"\<\:534e\:8bed\:7535\:5f71-\:7535\:5f71\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"152", ",", "\"\<\:5b98\:65b9\:5ef6\:4f38-\:756a\:5267\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"153", ",", "\"\<\:56fd\:4ea7\:52a8\:753b-\:56fd\:521b\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "154", ",", "\"\<\:4e09\:6b21\:5143\:821e\:8e48-\:821e\:8e48\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"156", ",", "\"\<\:821e\:8e48\:6559\:7a0b-\:821e\:8e48\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"157", ",", "\"\<\:7f8e\:5986-\:65f6\:5c1a\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"158", ",", "\"\<\:670d\:9970-\:65f6\:5c1a\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"159", ",", "\"\<\:8d44\:8baf-\:65f6\:5c1a\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"161", ",", "\"\<\:624b\:5de5-\:751f\:6d3b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"162", ",", "\"\<\:7ed8\:753b-\:751f\:6d3b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"163", ",", "\"\<\:8fd0\:52a8-\:751f\:6d3b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"164", ",", "\"\<\:5065\:8eab-\:65f6\:5c1a\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"166", ",", "\"\<\:5e7f\:544a-\:5e7f\:544a\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "168", ",", 
-       "\"\<\:56fd\:4ea7\:539f\:521b\:76f8\:5173-\:56fd\:521b\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{"169", ",", "\"\<\:5e03\:888b\:620f-\:56fd\:521b\>\""}], "}"}], 
-     ",", 
-     RowBox[{"{", 
-      RowBox[{"170", ",", "\"\<\:8d44\:8baf-\:56fd\:521b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"171", ",", "\"\<\:7535\:5b50\:7ade\:6280-\:6e38\:620f\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"172", ",", "\"\<\:624b\:673a\:6e38\:620f-\:6e38\:620f\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"173", ",", "\"\<\:684c\:6e38\:68cb\:724c-\:6e38\:620f\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"174", ",", "\"\<\:5176\:4ed6-\:751f\:6d3b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"175", ",", "\"\<ASMR-\:751f\:6d3b\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"176", ",", "\"\<\:6c7d\:8f66-\:79d1\:6280\>\""}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "178", ",", "\"\<\:79d1\:5b66\:63a2\:7d22-\:7eaa\:5f55\:7247\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "179", ",", "\"\<\:70ed\:8840\:519b\:4e8b-\:7eaa\:5f55\:7247\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{
-      "180", ",", 
-       "\"\<\:820c\:5c16\:4e0a\:7684\:65c5\:884c-\:7eaa\:5f55\:7247\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"182", ",", "\"\<\:5f71\:89c6\:6742\:8c08-\:5f71\:89c6\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"183", ",", "\"\<\:5f71\:89c6\:526a\:8f91-\:5f71\:89c6\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"184", ",", "\"\<\:9884\:544a \:8d44\:8baf-\:5f71\:89c6\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"185", ",", "\"\<\:56fd\:4ea7\:5267-\:7535\:89c6\:5267\>\""}], 
-      "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"187", ",", "\"\<\:6d77\:5916\:5267-\:7535\:89c6\:5267\>\""}], 
-      "}"}]}], "}"}]}], ";"}]}], "Input",
+          RowBox[{"\"\<\:7d2f\:8ba1\:7528\:65f6: \>\"", "<>", 
+           RowBox[{"ToString", "[", 
+            RowBox[{"tend", "-", "tstart"}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\"\<\:5e73\:5747\:901f\:5ea6: \>\"", "<>", 
+           RowBox[{"ToString", "[", 
+            FractionBox["totalvideos", 
+             RowBox[{"tend", "-", "tstart"}]], "]"}]}]}], 
+         "\[IndentingNewLine]", "}"}], "]"}]}], "]"}]}]}], "]"}]}]}], "Input",
  CellChangeTimes->{{3.730639167006252*^9, 3.7306391798622985`*^9}, {
    3.7306432023182297`*^9, 3.730643203286828*^9}, 3.7306452589986267`*^9, 
-   3.7306456042212515`*^9},
+   3.7306456042212515`*^9, {3.732879347487647*^9, 3.732879348258663*^9}, {
+   3.734789382958489*^9, 3.734789450529619*^9}, {3.7347894823698006`*^9, 
+   3.734789483886814*^9}, {3.734789550064839*^9, 3.7347896047119236`*^9}, {
+   3.734789646417862*^9, 3.734789692952711*^9}, {3.734789732955429*^9, 
+   3.7347897477643185`*^9}, {3.7347898141331863`*^9, 
+   3.7347898615851345`*^9}, {3.734789983718687*^9, 3.7347901232220325`*^9}, {
+   3.734790170087987*^9, 3.734790231645337*^9}, {3.734790263736519*^9, 
+   3.734790355488765*^9}, {3.7347904053584595`*^9, 3.734790603396017*^9}, {
+   3.734791149502116*^9, 3.7347911517991085`*^9}, {3.734791258187539*^9, 
+   3.734791258671941*^9}, {3.734828368397641*^9, 3.734828370163355*^9}, 
+   3.734828411898372*^9, {3.734828727943475*^9, 3.734828734047552*^9}, {
+   3.734829084353511*^9, 3.7348290848068123`*^9}, {3.734829888755883*^9, 
+   3.734829891225535*^9}, {3.734829977669456*^9, 3.7348299804333825`*^9}, {
+   3.7351739000561714`*^9, 3.7351739436117463`*^9}, {3.735174013301302*^9, 
+   3.7351740642541275`*^9}, {3.7351741507294197`*^9, 3.73517415089703*^9}, {
+   3.7370575770132713`*^9, 3.7370575789142537`*^9}, {3.7370576512282276`*^9, 
+   3.7370576540090675`*^9}, {3.7370580694472446`*^9, 
+   3.7370580703379154`*^9}, {3.7370581085076065`*^9, 
+   3.7370581122757626`*^9}, {3.7386765365885077`*^9, 
+   3.7386766297324114`*^9}, {3.7393465596447515`*^9, 3.739346621041994*^9}, {
+   3.7393470880555024`*^9, 3.7393470913274918`*^9}, {3.7393479108782015`*^9, 
+   3.739347919025448*^9}, {3.7393479915442753`*^9, 3.739348006843132*^9}, 
+   3.7393481007985578`*^9, {3.7393484969495153`*^9, 3.739348497761015*^9}, {
+   3.7393485956540737`*^9, 3.739348595991435*^9}},
  CellLabel->"In[1]:=",ExpressionUUID->"a755fa64-325f-4c9e-b012-7b3d3daa8e02"],
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{
-   RowBox[{"GetData", "[", 
-    RowBox[{"#", ",", "800", ",", "45", ",", "22000000"}], "]"}], "&"}], "/@", 
-  RowBox[{"s", "[", 
-   RowBox[{"[", 
-    RowBox[{";;", ",", "1"}], "]"}], "]"}]}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"(*", "\[IndentingNewLine]", "\t", 
+  RowBox[{"GetData", "[", 
+   RowBox[{"\"\<2018-6-30\>\"", ",", "1500", ",", "60"}], "]"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{
-    "\:8f93\:5165", ":", "\[IndentingNewLine]", " ", "\:53c2\:65701", ":", 
-     " ", 
-     RowBox[{"\:5206\:533a\:7f16\:53f7", "\[IndentingNewLine]", 
-      RowBox[{
-      "\:53c2\:65702", ":", " ", 
-       "\:5355\:6b21\:722c\:53d6\:9875\:9762\:6570"}]}]}], ",", 
-    RowBox[{
-    "\:8d8a\:9ad8\:5237\:65b0\:65f6\:95f4\:8d8a\:957f", "\[IndentingNewLine]",
+    "GetData", " ", "\:51fd\:6570", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "\:529f\:80fd"}], "\:ff1a", 
+    RowBox[{"\:722c\:866b", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{
+     "\:8f93\:5165", ":", "\[IndentingNewLine]", " ", "\:53c2\:65701", ":", 
       " ", 
+      RowBox[{"\:5730\:5740\:5b57\:7b26\:4e32", "\[IndentingNewLine]", 
+       RowBox[{
+       "\:53c2\:65702", ":", " ", 
+        "\:5355\:6b21\:8bbf\:95ee\:6b21\:6570\:4e0a\:9650"}]}]}]}], "\:ff0c", 
+    RowBox[{
+    "\:8d8a\:9ad8\:5237\:65b0\:65f6\:95f4\:8d8a\:957f", "\[IndentingNewLine]", 
+     RowBox[{"(", 
+      RowBox[{
+      "\:5efa\:8bae\:6839\:636e\:7535\:8111\:7684\:6027\:80fd\:548c\:7f51\
+\:7edc\:73af\:5883\:81ea\:884c\:8c03\:8282", "\:ff0c", 
+       "\:63a7\:5236\:572820\:79d2\:5de6\:53f3\:5237\:65b0\:4e00\:6b21\:6548\
+\:7387\:6700\:4f73"}], ")"}], "\[IndentingNewLine]", " ", 
      RowBox[{"\:53c2\:65703", ":", " ", 
       RowBox[{"\:6700\:5927\:54cd\:5e94\:65f6\:95f4", 
-       RowBox[{"(", "\:79d2", ")"}]}]}]}], ",", 
+       RowBox[{"(", "\:79d2", ")"}]}]}]}], "\:ff0c", 
     "\:8d85\:8fc7\:8be5\:65f6\:95f4\:4ecd\:672a\:5b8c\:6210\:5355\:6b21\:8ba1\
 \:7b97\:8ba4\:4e3a\:53d1\:751f\:9519\:8bef", ",", 
     RowBox[{
     "\:5e76\:884c\:5185\:6838\:5f3a\:5236\:91cd\:542f", "\[IndentingNewLine]",
-      " ", 
-     RowBox[{"\:53c2\:65704", ":", " ", 
-      RowBox[{
-      "av\:53f7\:4e0a\:9650", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       "\:8f93\:51fa"}], ":", 
-      "\:540c\:76ee\:5f55\:4e0b\:7684\:4e00\:7cfb\:5217\:4e8c\:8fdb\:5236\
-\:6587\:4ef6"}]}], ",", 
-    RowBox[{
-    "\:540d\:79f0\:4e3a\:5206\:533a\:7f16\:53f7\:5bf9\:5e94\:6570\:5b57", 
-     "\[IndentingNewLine]", "\[IndentingNewLine]", 
-     "\:4e8c\:8fdb\:5236\:6587\:4ef6\:6bcf12\:4e2aint\:6574\:6570\:517148\
-\:5b57\:8282\:8868\:793a\:4e00\:4e2a\:89c6\:9891\:6570\:636e"}], "\:ff0c", 
-    RowBox[{"\:542b\:4e49\:4f9d\:6b21\:4e3a", "\[IndentingNewLine]", "aid", 
-     RowBox[{"(*", "\:89c6\:9891\:7f16\:53f7", "*)"}], "\[IndentingNewLine]", 
-     "mid", 
-     RowBox[{"(*", "\:4e0a\:4f20\:8005\:7f16\:53f7", "*)"}], 
-     "\[IndentingNewLine]", "pubdate", 
-     RowBox[{"(*", "\:6295\:7a3f\:65f6\:95f4", "*)"}], "\[IndentingNewLine]", 
-     "duration", 
-     RowBox[{"(*", "\:89c6\:9891\:65f6\:957f", "*)"}], "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
      RowBox[{
-     "\"\<65536*\>\"", "<>", "videos", "<>", "\"\<+256*\>\"", "<>", "tid", 
-      "<>", "\"\<+128*(\>\"", "<>", "copyright", "<>", "\"\<-1)+64*\>\"", "<>",
-       "bp", "<>", "\"\<+32*\>\"", "<>", "elec", "<>", "\"\<+16*\>\"", "<>", 
-      "download", "<>", "\"\<+8*\>\"", "<>", "movie", "<>", "\"\<+4*\>\"", "<>",
-       "pay", "<>", "\"\<+2*\>\"", "<>", "hd5", "<>", "\"\<+\>\"", "<>", 
-      "noreprint"}]}], ",", 
-    RowBox[{"(*", "\:5176\:5b83\:9759\:6001\:4fe1\:606f", "*)"}], 
-    "\[IndentingNewLine]", 
-    RowBox[{"view", 
-     RowBox[{"(*", "\:64ad\:653e\:6570", "*)"}], "\[IndentingNewLine]", 
+     "\:8f93\:51fa", ":", 
+      "\:540c\:76ee\:5f55\:4e0b\:4ee5\:53c2\:65701\:4e3a\:540d\:79f0\:7684\
+\:4e8c\:8fdb\:5236\:6587\:4ef6"}]}], ",", 
+    RowBox[{
+    "\:5b58\:653e\:5168\:7ad9\:6570\:636e", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     "\:4e8c\:8fdb\:5236\:6587\:4ef6\:6bcf13\:4e2aint\:6574\:6570\:517152\
+\:5b57\:8282\:8868\:793a\:4e00\:4e2a\:89c6\:9891\:6570\:636e"}], "\:ff0c", 
+    RowBox[{
+     RowBox[{"\:542b\:4e49\:4f9d\:6b21\:4e3a", 
+      RowBox[{"(", 
+       RowBox[{
+       "\:82e5\:4efb\:4e00\:9879\:51fa\:73b0\:9519\:8bef\:5219\:8bb0\:5f55\
+\:4e3a", "-", "1"}], ")"}], "\[IndentingNewLine]", "aid", 
+      RowBox[{"(", "\:89c6\:9891\:7f16\:53f7", ")"}], "\[IndentingNewLine]", 
+      "mid", 
+      RowBox[{"(", "\:4e0a\:4f20\:8005\:7f16\:53f7", ")"}], 
+      "\[IndentingNewLine]", "pubdate", 
+      RowBox[{"(", "\:6295\:7a3f\:65f6\:95f4", ")"}], "\[IndentingNewLine]", 
+      "duration", 
+      RowBox[{"(", "\:89c6\:9891\:65f6\:957f", ")"}], "\[IndentingNewLine]", 
+      "65536", "*", "videos"}], "+", 
+     RowBox[{"256", "*", "tid"}], "+", 
+     RowBox[{"128", "*", 
+      RowBox[{"(", 
+       RowBox[{"copyright", "-", "1"}], ")"}]}], "+", 
+     RowBox[{"64", "*", "bp"}], "+", 
+     RowBox[{"32", "*", "elec"}], "+", 
+     RowBox[{"16", "*", "download"}], "+", 
+     RowBox[{"8", "*", "movie"}], "+", 
+     RowBox[{"4", "*", "pay"}], "+", 
+     RowBox[{"2", "*", "hd5"}], "+", "noreprint"}], ",", 
+    RowBox[{
+     RowBox[{"(", "\:5176\:5b83\:9759\:6001\:4fe1\:606f", ")"}], 
+     "\[IndentingNewLine]", "view", 
+     RowBox[{"(", "\:64ad\:653e\:6570", ")"}], "\[IndentingNewLine]", 
      "danmaku", 
-     RowBox[{"(*", "\:5f39\:5e55\:6570", "*)"}], "\[IndentingNewLine]", 
-     "coin", 
-     RowBox[{"(*", "\:786c\:5e01\:6570", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"(", "\:5f39\:5e55\:6570", ")"}], "\[IndentingNewLine]", "coin", 
+     RowBox[{"(", "\:786c\:5e01\:6570", ")"}], "\[IndentingNewLine]", 
      "favorite", 
-     RowBox[{"(*", "\:6536\:85cf\:6570", "*)"}], "\[IndentingNewLine]", 
-     "share", 
-     RowBox[{"(*", "\:5206\:4eab\:6570", "*)"}], "\[IndentingNewLine]", 
-     "reply", 
-     RowBox[{"(*", "\:8bc4\:8bba\:6570", "*)"}], "\[IndentingNewLine]", 
-     "like", 
-     RowBox[{"(*", "\:70b9\:8d5e\:6570", "*)"}], "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", "\:6ce8"}], "\:ff1a", 
+     RowBox[{"(", "\:6536\:85cf\:6570", ")"}], "\[IndentingNewLine]", "share", 
+     RowBox[{"(", "\:5206\:4eab\:6570", ")"}], "\[IndentingNewLine]", "reply", 
+     RowBox[{"(", "\:8bc4\:8bba\:6570", ")"}], "\[IndentingNewLine]", "like", 
+     RowBox[{"(", "\:70b9\:8d5e\:6570", ")"}], "\[IndentingNewLine]", 
+     "dislike", 
+     RowBox[{"(", "\:5dee\:8bc4\:6570", ")"}], "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", "\:6ce8"}], "\:ff1a", 
     RowBox[{
     "\:9700\:8981\:6309\:5982\:4e0b\:8fdb\:884c\:5e76\:884c\:5185\:6838\:914d\
 \:7f6e", "\[IndentingNewLine]", 
@@ -1542,16 +1239,34 @@ XnjhhRdeeOGFlwnl/wPKw0WI
       ImageSize->{266., Automatic},
       ImageSizeRaw->{552, 206},
       PlotRange->{{0, 552}, {0, 206}}]}]}], "\[IndentingNewLine]", 
-   "*)"}]}]}], "Input",
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "(*", "\:8bfb\:53d6\:6570\:636e\:53ef\:4ee5\:5229\:7528github\:540c\:76ee\
+\:5f55\:4e0b\:7684iodata\:9879\:76ee", "*)"}]}]}], "Input",
  CellChangeTimes->{{3.729599815975792*^9, 3.7296002099310827`*^9}, {
-  3.7296003620661964`*^9, 3.7296004482140045`*^9}, {3.7297763165774894`*^9, 
-  3.7297763500294685`*^9}, {3.7298263879559402`*^9, 3.729826388121049*^9}},
- CellLabel->"In[5]:=",ExpressionUUID->"417488d9-2942-4828-a651-43830bb49c66"]
+   3.7296003620661964`*^9, 3.7296004482140045`*^9}, {3.7297763165774894`*^9, 
+   3.7297763500294685`*^9}, {3.7298263879559402`*^9, 3.729826388121049*^9}, {
+   3.7347906165187793`*^9, 3.7347906352322793`*^9}, 3.734790842312773*^9, {
+   3.7347912751088347`*^9, 3.734791277202724*^9}, {3.7348281176751223`*^9, 
+   3.7348283209364266`*^9}, 3.734828416336135*^9, {3.7348288069532423`*^9, 
+   3.7348288252094345`*^9}, 3.734829484317176*^9, {3.7348301407624454`*^9, 
+   3.7348301408875303`*^9}, {3.7348376736514874`*^9, 3.734837674734211*^9}, {
+   3.735175567829357*^9, 3.735175567947974*^9}, {3.7370367012964973`*^9, 
+   3.737036705601101*^9}, {3.737037493898172*^9, 3.737037494054446*^9}, {
+   3.7370584165778856`*^9, 3.7370584285708003`*^9}, {3.738676707234559*^9, 
+   3.7386767250845413`*^9}, {3.73867740388153*^9, 3.738677405600198*^9}, {
+   3.7386775224761953`*^9, 3.7386775480216184`*^9}, {3.738702896727959*^9, 
+   3.738702900724567*^9}, {3.7393491336303906`*^9, 3.7393492713727927`*^9}, {
+   3.7393493029909577`*^9, 3.7393494362221723`*^9}, {3.7393494690105906`*^9, 
+   3.739349562523876*^9}, {3.739349593259056*^9, 3.7393495956745005`*^9}, {
+   3.7393496387152014`*^9, 3.739349791016452*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"417488d9-2942-4828-a651-43830bb49c66"]
 },
 WindowSize->{1280, 637},
 WindowMargins->{{-8, Automatic}, {Automatic, -8}},
 Magnification->1.5,
-FrontEndVersion->"11.3 for Microsoft Windows (64-bit) (2018\:5e743\:67086\
+FrontEndVersion->"11.3 for Microsoft Windows (64-bit) (2018\:5e743\:670828\
 \:65e5)",
 StyleDefinitions->"Default.nb"
 ]
@@ -1566,8 +1281,8 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 28903, 672, 5469, "Input",ExpressionUUID->"a755fa64-325f-4c9e-b012-7b3d3daa8e02"],
-Cell[29464, 694, 50745, 854, 991, "Input",ExpressionUUID->"417488d9-2942-4828-a651-43830bb49c66"]
+Cell[558, 20, 18035, 359, 4350, "Input",ExpressionUUID->"a755fa64-325f-4c9e-b012-7b3d3daa8e02"],
+Cell[18596, 381, 52478, 882, 1271, "Input",ExpressionUUID->"417488d9-2942-4828-a651-43830bb49c66"]
 }
 ]
 *)
